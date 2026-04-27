@@ -8,9 +8,9 @@ Nina Fischer, Adil Siripatana, Amy Wilson, Lindsay Beevers
 
 ## Links
 
-[Interactive flood map](https://github.com/Nina3211/case_study_inverurie/git)
-[Methodology code](https://github.com/Nina3211/case_study_inverurie/report.html)
-[Methdology paper](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2024WR039668)
+- [Interactive flood map](https://github.com/Nina3211/case_study_inverurie/git)
+- [Methodology code](https://github.com/Nina3211/case_study_inverurie/report.html)
+- [Methdology paper](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2024WR039668)
 
 
 ## About
