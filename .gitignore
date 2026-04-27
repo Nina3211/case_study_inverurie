@@ -1,0 +1,13 @@
+﻿*.max
+*.csv
+*.joblib
+*.tif
+*.asc
+*.png
+outputs/
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+.quarto/
+*_fixed.qmd
+*.quarto_ipynb
