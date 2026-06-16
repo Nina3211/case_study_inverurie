@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Inverurie — About the flood emulator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;
+      min-height:100vh;}
+header{background:#1e293b;border-bottom:1px solid #334155;
+        padding:14px 40px;display:flex;align-items:center;justify-content:space-between;}
+header h1{font-size:clamp(15px,2vw,22px);font-weight:600;color:#f1f5f9;}
+.back-btn{padding:5px 14px;background:#0f2236;color:#60a5fa;border:1px solid #1e3a5f;
+           border-radius:5px;font-size:13px;cursor:pointer;text-decoration:none;}
+.back-btn:hover{background:#162032;}
+main{max-width:980px;margin:40px auto;padding:0 24px 60px;}
+.section{background:#111d2e;border:1px solid #1e3a5f;border-radius:10px;
+           padding:28px 32px;margin-bottom:28px;}
+.section h2{font-size:clamp(14px,1.6vw,20px);font-weight:600;color:#60a5fa;margin-bottom:14px;}
+.section p{font-size:clamp(12px,1.2vw,15px);color:#94a3b8;line-height:1.70;margin-bottom:10px;}
+.section ul{padding-left:20px;}
+.section li{font-size:clamp(12px,1.2vw,15px);color:#94a3b8;line-height:1.70;margin-bottom:6px;}
+.placeholder{background:#0a1220;border:1px dashed #334155;border-radius:6px;
+               padding:16px 20px;margin-top:12px;}
+.placeholder p{color:#475569;font-style:italic;}
+.tag{display:inline-block;padding:2px 9px;border-radius:12px;font-size:11px;
+      font-weight:600;margin-right:5px;margin-bottom:4px;background:#1e3a5f;color:#93c5fd;}
+footer{text-align:center;padding:20px;color:#334155;font-size:12px;border-top:1px solid #1e293b;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Inverurie — About the probabilistic flood emulator</h1>
+  <a href="flood_explorer_30yr_with_cross_sections.html" class="back-btn">← Back to flood map</a>
+</header>
+
+<main>
+
+  <div class="section">
+    <h2>Project overview</h2>
+    <p>
+      This dashboard is produced by the <strong>Uncertainty Quantification for Flood
+      Modelling (UQ4FM)</strong> project at the University of Edinburgh. It demonstrates
+      how surrogate modelling can make probabilistic flood mapping computationally
+      tractable for operational use by practitioners and regulators.
+    </p>
+    <p>
+      Traditional Full Monte Carlo (FMC) probabilistic analysis requires running a
+      high-resolution 2D hydraulic model hundreds or thousands of times — prohibitively
+      expensive for routine design work. The emulator approach replaces those expensive
+      model runs with a fast surrogate trained on a small set of simulations.
+    </p>
+    <div class="placeholder">
+      <p>[ Expand with project-specific context, funding acknowledgements, or partner logos here. ]</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Surrogate modelling methodology</h2>
+    <p>
+      The surrogate used here is <strong>PCK (Polynomial Chaos Kriging)</strong>, which
+      combines a Polynomial Chaos Expansion (PCE) systematic trend with a Gaussian
+      Process Regression (GPR) residual. PCE provides an orthogonal polynomial
+      approximation of the response surface; the GPR component captures residual
+      non-linear patterns and provides a built-in variance estimate.
+    </p>
+    <p>
+      To handle the high dimensionality of spatial flood maps (up to 900,000 grid cells),
+      <strong>Proper Orthogonal Decomposition (POD)</strong> via Singular Value
+      Decomposition (SVD) first compresses each map into a small number of dominant
+      spatial modes. A separate PCK model is then fitted to each modal coefficient,
+      reducing the learning problem from 900,000 outputs to ~10–20.
+    </p>
+    <ul>
+      <li><strong>Training set:</strong> N=150 LISFLOOD-FP simulations, Sobol-sampled
+          over the inflow uncertainty space.</li>
+      <li><strong>Inputs:</strong> peak discharge at each tributary (Uniform, bounded
+          by GEV 95% CI) + inter-tributary timing lag (Normal).</li>
+      <li><strong>Output:</strong> maximum inundation depth map (1000 × 900 cells,
+          5 m resolution).</li>
+    </ul>
+    <div class="placeholder">
+      <p>[ Add validation metrics (R², MAE, spatial bias maps) and figures here. ]</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Inflow uncertainty characterisation</h2>
+    <p>
+      Uncertainty in the peak inflow at each tributary is derived from a GEV analysis
+      of the Annual Maximum (AMAX) flow series, with 95% bootstrap confidence intervals
+      (1,000 resamples). The lower and upper CI bounds at the target return period
+      define the Uniform distribution for each input.
+    </p>
+    <p>
+      The timing lag between tributary peaks is characterised from historical 15-minute
+      flow records, with a Normal distribution fitted to observed peak-to-peak offsets.
+    </p>
+    <div class="placeholder">
+      <p>[ Insert GEV fit plots, lag distribution histograms, or a table of fitted
+          parameters here. ]</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>How to read the probabilistic maps</h2>
+    <ul>
+      <li><strong>P(inundation):</strong> fraction of Monte Carlo runs in which a
+          cell is inundated. 0.9 means the cell flooded in 90% of realisations.</li>
+      <li><strong>Median depth (P50):</strong> the depth exceeded in 50% of runs —
+          the best single-number summary.</li>
+      <li><strong>P05 / P95 depths:</strong> near-best-case and near-worst-case
+          estimates. P95 should be used for critical infrastructure and design.</li>
+      <li><strong>P95−Median / P95−P05 range maps:</strong> hydrological sensitivity.
+          Large values indicate that predictions are strongly uncertain — more freeboard
+          may be warranted.</li>
+      <li><strong>Depth exceedance curve (click any cell):</strong> shows P(depth &gt; d)
+          vs d at that point. Read: "there is a X% chance depth exceeds Y m."</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>References</h2>
+    <p>
+      Siripatana, A., Wilson, A. L., &amp; Beevers, L. (2025). Uncertainty quantification
+      for multi-input fluvial flood inundation using GPR- and PCE-based surrogates.
+      <em>Water Resources Research</em>, 61, e2024WR039668.
+      <a href="https://doi.org/10.1029/2024WR039668"
+         style="color:#60a5fa;">https://doi.org/10.1029/2024WR039668</a>
+    </p>
+    <div class="placeholder">
+      <p>[ Add further references, data sources, or model documentation links here. ]</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Contact &amp; acknowledgements</h2>
+    <div class="placeholder">
+      <p>[ Nina Fischer, Adil Siripatana, Amy Wilson, Lindsay Beevers —
+          University of Edinburgh, School of Engineering. Add contact details,
+          grant numbers, and acknowledgements here. ]</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  UQ4FM — Uncertainty Quantification for Flood Modelling — University of Edinburgh
+</footer>
+</body>
+</html>
