@@ -20,6 +20,6 @@ Nina Fischer, Adil Siripatana, Amy Wilson, Lindsay Beevers
 * 1-in-100 year return period flood scenario
 * LISFLOOD-FP ensemble simulations
 * POD-PCK surrogate model
-* Monte Carlo uncertainty propagation (N=500)
+* Monte Carlo uncertainty propagation (N=1000) based on uncertainty in the peak inflows
 * Study area: Inverurie, Aberdeenshire, Scotland
 
